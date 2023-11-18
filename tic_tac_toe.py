@@ -1,94 +1,81 @@
 from random import randint
-print("Map:")
-def you(a1,a2,a3,a4,a5,a6,a7,a8,a9):
-	print(a1,"|",a2,"|",a3) 
-	print("----------")
-	print(a4,"|",a5,"|",a6)
-	print("----------")
-	print(a7,"|",a8,"|",a9)
-you(0,1,2,3,4,5,6,7,8)
-a=["*","*","*","*","*","*","*","*","*"]
-print("You play: X")
-b=randint(0,1)
-you(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],)
-print("")
-if b==1:
-	print("YOU")
-	f=0
-	while f!=1:
-		w=int(input())
-		if w>=0 and w<=9:
-			f=1
-		else:
-			print("False")
-	a[w]="X"
-	you(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],)
-	print("")
-win=0
-b=1
-while "*" in a !=0 and win ==0:
-	if b==1:
-		f=0
-		while f!=1:
-			c=randint(0,8)
-			if a[c]=="*":
-				f=1
-		a[c]="O"
-		b=0
-		you(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],)
-		print("")
-	else:
-		f=0
-		while f!=1:
-			w=int(input())
-			if a[w]=="*":
-				f=1
-		a[w]="X"
-		you(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],)
-		print("")
-		b=1
-	
-	if a[0]=="X" and a[4]=="X" and a[8]=="X":
-		win=1
-		print("You win")
-	elif a[1]=="X" and a[4]=="X" and a[7]=="X":
-		win=1
-		print("You win")
-	elif a[2]=="X" and a[4]=="X" and a[6]=="X":
-		win=1
-		print("You win")
-	elif a[3]=="X" and a[4]=="X" and a[5]=="X":
-		win=1
-		print("You win")
-	elif a[0]=="X" and a[3]=="X" and a[6]=="X":
-		win=1
-		print("You win")
-	elif a[1]=="X" and a[4]=="X" and a[7]=="X":
-		win=1
-		print("You win")
-	elif a[2]=="X" and a[5]=="X" and a[8]=="X":
-		win=1
-		print("You win")
-	elif a[0]=="O" and a[4]=="O" and a[8]=="O":
-		win=1
-		print("You lose")
-	elif a[1]=="O" and a[4]=="O" and a[7]=="O":
-		win=1
-		print("You lose")
-	elif a[2]=="O" and a[4]=="O" and a[6]=="O":
-		win=1
-		print("You lose")
-	elif a[3]=="O" and a[4]=="O" and a[5]=="O":
-		win=1
-		print("You lose")
-	elif a[0]=="O" and a[3]=="O" and a[6]=="O":
-		win=1
-		print("You lose")
-	elif a[1]=="O" and a[4]=="O" and a[7]=="O":
-		win=1
-		print("You lose")
-	elif a[2]=="O" and a[5]=="O" and a[8]=="O":
-		win=1
-		print("You lose")
-if win==0:
-	print("draw")
+def draw_board(board):
+    print(" " + board[0] + " | " + board[1] + " | " + board[2])
+    print("---+---+---")
+    print(" " + board[3] + " | " + board[4] + " | " + board[5])
+    print("---+---+---")
+    print(" " + board[6] + " | " + board[7] + " | " + board[8])
+
+def check_win(board, player):
+    winning_combinations=[(0, 1, 2), (3, 4, 5), (6,7,8),
+                          (0,3,6), (1,4,7), (2,5,8),
+                          (0,4,8),(2,4,6)]
+    for combination in winning_combinations:
+        if board[combination[0]]==board[combination[1]]==board[combination[2]]==player:
+            return True
+    return False
+def get_player_move(board, player):
+    get=int(input("Введите номер клетки: "))
+    if get>=1 and get<=9 and board[get-1]==" ":
+        board[get-1]=player
+        return board
+    else:
+        print("Ошибка")
+        return get_player_move(board, player)
+def get_computer_move(board, player):
+    get=randint(1,9)
+    if get>=1 and get<=9 and board[get-1]==" ":
+        board[get-1]=player
+        return board
+    else:
+        return get_computer_move(board, player)    
+def main():
+    map1=["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    board=[" ", " ", " ", " ", " ", " ", " ", " ", " "]
+    print("карта:")
+    draw_board(map1)
+    print("Первым хожит X, за кого ты будешь играть?")
+    print("1: X")
+    print("2: 0")
+    f=1
+    while f!=0:
+        b=int(input())
+        if b==1 or b==2:
+            f=0
+        else: print("Ошибка")
+    if b==1:
+        a=["X","0"]
+    else:
+        a=["0","X"]
+    ch=1
+    
+    draw_board(board)
+    while " " in board != True:
+        if b==2:
+            print("Ход компьютера:")
+            get_computer_move(board, a[1])
+            draw_board(board)
+            b-=1
+        
+        print("Ход игрока:")
+        get_player_move(board, a[0])
+        draw_board(board)
+        if check_win(board, a[0])==True:
+            print("Игрок победил!")
+            ch=0
+            break
+        if " " in board ==False:
+            break
+        
+        print("Ход компьютера:")
+        get_computer_move(board, a[1])
+        draw_board(board)
+        if check_win(board, a[1])==True:
+            print("Компьютер победил!")
+            ch=0
+            break
+    if " " in board ==False and ch==1:
+        print("Ничья")
+
+
+main()
